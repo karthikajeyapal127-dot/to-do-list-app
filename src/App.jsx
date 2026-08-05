@@ -7,36 +7,57 @@ function App() {
 
   const addTask = () => {
     if (task.trim() === "") return;
-    setTasks([...tasks, task]);
+
+    setTasks([...tasks, { text: task, completed: false }]);
     setTask("");
   };
 
   const deleteTask = (index) => {
-    const newTasks = tasks.filter((_, i) => i !== index);
-    setTasks(newTasks);
+    setTasks(tasks.filter((_, i) => i !== index));
+  };
+
+  const toggleComplete = (index) => {
+    const updated = [...tasks];
+    updated[index].completed = !updated[index].completed;
+    setTasks(updated);
   };
 
   return (
-    <div className="container">
-      <h1>To-Do List App</h1>
+    <div className="app">
+      <div className="card">
+        <h1>📝 To-Do List</h1>
 
-      <input
-        type="text"
-        placeholder="Enter a task"
-        value={task}
-        onChange={(e) => setTask(e.target.value)}
-      />
+        <div className="inputBox">
+          <input
+            type="text"
+            placeholder="Enter your task..."
+            value={task}
+            onChange={(e) => setTask(e.target.value)}
+          />
+          <button onClick={addTask}>Add</button>
+        </div>
 
-      <button onClick={addTask}>Add</button>
+        <ul>
+          {tasks.map((item, index) => (
+            <li key={index}>
+              <span
+                className={item.completed ? "done" : ""}
+                onClick={() => toggleComplete(index)}
+              >
+                {item.completed ? "✅ " : "⬜ "}
+                {item.text}
+              </span>
 
-      <ul>
-        {tasks.map((t, index) => (
-          <li key={index}>
-            {t}
-            <button onClick={() => deleteTask(index)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+              <button
+                className="delete"
+                onClick={() => deleteTask(index)}
+              >
+                Delete
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
